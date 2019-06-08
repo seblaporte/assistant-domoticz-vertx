@@ -1,0 +1,8 @@
+= assistant-domoticz-vertx
+
+== Project launch
+
+[source,bash]
+----
+mvn clean vertx:run
+----

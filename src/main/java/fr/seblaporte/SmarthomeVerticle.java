@@ -21,7 +21,7 @@ public class SmarthomeVerticle extends AbstractVerticle {
 
     private void smarthome(RoutingContext routingContext) {
 
-        vertx.eventBus().send("domoticzApi", "devices", messageAsyncResult -> {
+        vertx.eventBus().send("domoticzApi", "plans", messageAsyncResult -> {
             if (messageAsyncResult.succeeded()) {
                 routingContext.response().end(messageAsyncResult.result().body().toString());
             } else {
