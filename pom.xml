@@ -10,7 +10,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- vert.x properties -->
-        <vertx.version>3.4.0</vertx.version>
+        <vertx.version>3.7.1</vertx.version>
         <vertx.verticle>fr.seblaporte.LauncherVerticle</vertx.verticle>
         <!-- Maven plugins -->
         <fabric8-vertx-maven-plugin.version>1.0.5</fabric8-vertx-maven-plugin.version>
@@ -38,6 +38,10 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-mqtt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

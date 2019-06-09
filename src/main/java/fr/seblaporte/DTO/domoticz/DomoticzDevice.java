@@ -23,7 +23,7 @@ public class DomoticzDevice {
     private String description;
 
     @JsonProperty("SubType")
-    private DomoticzSubTypeEnum subType;
+    private String subType;
 
     @JsonProperty("SwitchType")
     private DomoticzSwitchTypeEnum switchType;
@@ -32,7 +32,7 @@ public class DomoticzDevice {
     private String hardwareName;
 
     @JsonProperty("HardwareType")
-    private DomoticzHardwareEnum hardwareType;
+    private String hardwareType;
 
     @JsonProperty("Image")
     private DomoticzDeviceTypeEnum deviceCategory;
