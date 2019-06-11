@@ -30,7 +30,7 @@ public class SmarthomeVerticle extends AbstractVerticle {
 
     private void smarthome(RoutingContext routingContext) {
 
-        final String intent = routingContext.getBodyAsJson().getString("intent");
+        final String intent = routingContext.getBodyAsJson().getJsonArray("inputs").getJsonObject(0).getString("intent");
 
         switch (intent) {
             case "action.devices.SYNC":
@@ -43,17 +43,20 @@ public class SmarthomeVerticle extends AbstractVerticle {
     private void createDevices(RoutingContext routingContext) {
         vertx.eventBus().send("domoticzApi", "devices", messageAsyncResult -> {
             if (messageAsyncResult.succeeded()) {
+
+                final String requestId = routingContext.getBodyAsJson().getString("requestId");
+
                 JsonArray devicesFromDomoticz = (JsonArray) messageAsyncResult.result().body();
                 JsonArray actionsDevices = new JsonArray();
 
                 devicesFromDomoticz.stream().map(deviceFromDomoticz -> {
                     JsonObject device = new JsonObject();
                     device.put("id", ((JsonObject) deviceFromDomoticz).getValue("idx"));
-                    device.put("name", ((JsonObject) deviceFromDomoticz).getString("Name"));
+                    device.put("name", new JsonObject().put("name", ((JsonObject) deviceFromDomoticz).getString("Name")));
                     device.put("willReportState", true);
-                    device.put("deviceInfo", new JsonArray()
-                            .add(new JsonObject().put("HardwareName", ((JsonObject) deviceFromDomoticz).getString("HardwareName")))
-                            .add(new JsonObject().put("HardwareType", ((JsonObject) deviceFromDomoticz).getString("HardwareType")))
+                    device.put("deviceInfo", new JsonObject()
+                            .put("manufacturer", ((JsonObject) deviceFromDomoticz).getString("HardwareName"))
+                            .put("model", ((JsonObject) deviceFromDomoticz).getString("HardwareType"))
                     );
 
                     final String switchType = ((JsonObject) deviceFromDomoticz).getString("SwitchType");
@@ -73,8 +76,10 @@ public class SmarthomeVerticle extends AbstractVerticle {
                 }).forEach(actionsDevices::add);
 
                 JsonObject response = new JsonObject()
-                        .put("payload", new JsonObject().put("agentUserId", "123456"))
-                        .put("devices", actionsDevices);
+                        .put("payload", new JsonObject()
+                                .put("agentUserId", "123456")
+                                .put("devices", actionsDevices))
+                        .put("requestId", requestId);
 
                 routingContext.response().end(response.encodePrettily());
             }
