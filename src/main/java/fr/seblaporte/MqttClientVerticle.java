@@ -25,10 +25,10 @@ public class MqttClientVerticle extends AbstractVerticle {
 
     private void sendMessageToTopic(Message<JsonObject> jsonObjectMessage) {
 
-        mqttClient.connect(1884, "192.168.5.110", s -> {
+        mqttClient.connect(1883, "127.0.0.1", s -> {
             mqttClient.publish("domoticz/in",
                     Buffer.buffer(jsonObjectMessage.body().encodePrettily()),
-                    MqttQoS.AT_LEAST_ONCE,
+                    MqttQoS.AT_MOST_ONCE,
                     false,
                     false);
             mqttClient.disconnect();

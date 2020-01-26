@@ -1,0 +1,24 @@
+version: "2"
+services:
+  domoticz:
+    image: linuxserver/domoticz
+    container_name: domoticz
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./data/domoticz/config:/config
+    ports:
+      - 8081:8080
+      - 6144:6144
+      - 1443:1443
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    volumes:
+      - ./data/mqtt/config:/mosquitto/config
+      - ./data/mqtt/data:/mosquitto/data
+    ports:
+      - 9001:9001
+      - 1883:1883

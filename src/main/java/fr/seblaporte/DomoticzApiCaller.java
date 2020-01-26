@@ -81,7 +81,7 @@ public class DomoticzApiCaller extends AbstractVerticle {
         System.out.println("Get devices from Domoticz API");
 
         return client
-                .get(8081, "192.168.5.110", "/json.htm")
+                .get(8081, "127.0.0.1", "/json.htm")
                 .addQueryParam("type", "devices")
                 .addQueryParam("used", "true")
                 .addQueryParam("filter", "all")
@@ -94,7 +94,7 @@ public class DomoticzApiCaller extends AbstractVerticle {
         System.out.println("Get plans from Domoticz API");
 
         return client
-                .get(8081, "192.168.5.110", "/json.htm")
+                .get(8081, "127.0.0.1", "/json.htm")
                 .addQueryParam("type", "plans")
                 .addQueryParam("used", "true")
                 .as(BodyCodec.json(DomoticzPlanResponse.class));

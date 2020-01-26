@@ -22,7 +22,7 @@ public class DeviceControllerVerticle extends AbstractVerticle {
         final String command = jsonObjectMessage.body().getString("command");
 
         if ("action.devices.commands.OnOff".equals(command)) {
-            final Boolean on = jsonObjectMessage.body().getBoolean("on");
+            final Boolean on = jsonObjectMessage.body().getJsonObject("params").getBoolean("on");
             vertx.eventBus().send("mqttClient", controlOnOff(deviceId, on), messageAsyncResult -> {
                 replyHandler(jsonObjectMessage, messageAsyncResult);
             });

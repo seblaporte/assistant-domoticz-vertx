@@ -11,4 +11,5 @@ public class DomoticzDevicesResponse {
 
     /** Devices informations */
     private List<DomoticzDevice> result;
+
 }
