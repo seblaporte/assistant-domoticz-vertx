@@ -1,10 +1,7 @@
 package fr.seblaporte.DTO.google;
 
-import lombok.Data;
-
 import java.util.List;
 
-@Data
 public class DeviceDTO {
 
     /** Device id */
@@ -32,6 +29,62 @@ public class DeviceDTO {
         this.setWillReportState(true);
         this.setDeviceInfo(new DeviceInfoDTO());
         this.setRoomHint("");
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public DeviceTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(DeviceTypeEnum type) {
+        this.type = type;
+    }
+
+    public List<DeviceTraitEnum> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(List<DeviceTraitEnum> traits) {
+        this.traits = traits;
+    }
+
+    public DeviceNameDTO getName() {
+        return name;
+    }
+
+    public void setName(DeviceNameDTO name) {
+        this.name = name;
+    }
+
+    public Boolean getWillReportState() {
+        return willReportState;
+    }
+
+    public void setWillReportState(Boolean willReportState) {
+        this.willReportState = willReportState;
+    }
+
+    public String getRoomHint() {
+        return roomHint;
+    }
+
+    public void setRoomHint(String roomHint) {
+        this.roomHint = roomHint;
+    }
+
+    public DeviceInfoDTO getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setDeviceInfo(DeviceInfoDTO deviceInfo) {
+        this.deviceInfo = deviceInfo;
     }
 
 }

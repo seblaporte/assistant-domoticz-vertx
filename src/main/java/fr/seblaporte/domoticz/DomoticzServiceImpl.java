@@ -1,10 +1,13 @@
-package fr.seblaporte;
+package fr.seblaporte.domoticz;
 
 import fr.seblaporte.DTO.domoticz.DomoticzDevice;
 import fr.seblaporte.DTO.domoticz.DomoticzDevicesResponse;
 import fr.seblaporte.DTO.domoticz.DomoticzPlan;
 import fr.seblaporte.DTO.domoticz.DomoticzPlanResponse;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonArray;
@@ -12,50 +15,40 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.codec.BodyCodec;
+import io.vertx.servicediscovery.Record;
+import io.vertx.servicediscovery.types.EventBusService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DomoticzApiCaller extends AbstractVerticle {
+public class DomoticzServiceImpl implements DomoticzService {
 
     private WebClient client;
 
-    @Override
-    public void start() {
-
-        System.out.println("Demarrage de DomoticzApiCaller");
-
-        client = WebClient.create(vertx);
-
-        final MessageConsumer<String> consumer = vertx.eventBus().consumer("domoticzApi");
-        consumer.handler(this::callDomoticz);
+    public DomoticzServiceImpl(WebClient webClient) {
+        this.client = webClient;
     }
 
-    private void callDomoticz(Message<String> request) {
+    public void getDevices(Handler<AsyncResult<JsonArray>> resultHandler) {
+        getDevices().send(domoticzApiResponse -> {
+            if (domoticzApiResponse.succeeded()) {
+                final List<DomoticzDevice> listDomoticzDevices = domoticzApiResponse.result().body().getResult();
+                resultHandler.handle(Future.succeededFuture(serializeDomoticzDeviceList(listDomoticzDevices)));
+            } else {
+                System.out.println(domoticzApiResponse.cause().getMessage());
+            }
+        });
+    }
 
-        switch (request.body()) {
-            case "devices":
-                getDevices().send(domoticzApiResponse -> {
-                    if (domoticzApiResponse.succeeded()) {
-                        final List<DomoticzDevice> listDomoticzDevices = domoticzApiResponse.result().body().getResult();
-                        request.reply(serializeDomoticzDeviceList(listDomoticzDevices));
-                    } else {
-                        System.out.println(domoticzApiResponse.cause().getMessage());
-                    }
-                });
-                break;
-            case "plans":
-                getPlans().send(domoticzApiResponse -> {
-                    if (domoticzApiResponse.succeeded()) {
-                        final List<DomoticzPlan> listDomoticzPlans = domoticzApiResponse.result().body().getResult();
-                        request.reply(serializeDomoticzPlanList(listDomoticzPlans));
-                    } else {
-                        System.out.println(domoticzApiResponse.cause().getMessage());
-                    }
-                });
-                break;
-        }
-
+    public void getPlans(Handler<AsyncResult<JsonArray>> resultHandler) {
+        getPlans().send(domoticzApiResponse -> {
+            if (domoticzApiResponse.succeeded()) {
+                final List<DomoticzPlan> listDomoticzPlans = domoticzApiResponse.result().body().getResult();
+                resultHandler.handle(Future.succeededFuture(serializeDomoticzPlanList(listDomoticzPlans)));
+            } else {
+                System.out.println(domoticzApiResponse.cause().getMessage());
+            }
+        });
     }
 
     private JsonArray serializeDomoticzDeviceList(List<DomoticzDevice> objectList) {

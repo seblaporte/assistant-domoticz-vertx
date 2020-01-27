@@ -1,10 +1,5 @@
 package fr.seblaporte.DTO.domoticz;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
 public class DomoticzDeviceStatus {
 
     /* Device status */
@@ -17,4 +12,24 @@ public class DomoticzDeviceStatus {
         this.status = status;
     }
 
+    public DomoticzDeviceStatus(DomoticzDeviceStatusEnum status, Integer level) {
+        this.status = status;
+        this.level = level;
+    }
+
+    public DomoticzDeviceStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(DomoticzDeviceStatusEnum status) {
+        this.status = status;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
 }

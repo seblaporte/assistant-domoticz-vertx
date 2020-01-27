@@ -1,5 +1,6 @@
 package fr.seblaporte;
 
+import fr.seblaporte.domoticz.DomoticzService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -113,12 +114,16 @@ public class SmarthomeVerticle extends AbstractVerticle {
     }
 
     private void createDevices(RoutingContext routingContext) {
-        vertx.eventBus().send("domoticzApi", "devices", messageAsyncResult -> {
-            if (messageAsyncResult.succeeded()) {
+
+        DomoticzService domoticzService = DomoticzService.create(vertx);
+
+        domoticzService.getDevices(jsonArrayAsyncResult -> {
+
+            if (jsonArrayAsyncResult.succeeded()) {
 
                 final String requestId = routingContext.getBodyAsJson().getString("requestId");
 
-                JsonArray devicesFromDomoticz = (JsonArray) messageAsyncResult.result().body();
+                JsonArray devicesFromDomoticz = jsonArrayAsyncResult.result();
                 JsonArray actionsDevices = new JsonArray();
 
                 devicesFromDomoticz.stream().map(deviceFromDomoticz -> {
@@ -156,6 +161,7 @@ public class SmarthomeVerticle extends AbstractVerticle {
                 routingContext.response().end(response.encodePrettily());
             }
         });
+
     }
 
 }
