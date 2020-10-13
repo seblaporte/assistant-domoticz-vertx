@@ -1,6 +1,7 @@
 package fr.seblaporte.DTO.google;
 
 import java.util.List;
+import java.util.Map;
 
 public class DeviceDTO {
 
@@ -24,6 +25,8 @@ public class DeviceDTO {
 
     /** Contains fields describing the device for use in one-off logic if needed */
     private DeviceInfoDTO deviceInfo;
+
+    private Map<String, Object> customData;
 
     public DeviceDTO() {
         this.setWillReportState(true);

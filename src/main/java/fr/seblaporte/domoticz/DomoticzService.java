@@ -6,7 +6,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.client.WebClient;
-import io.vertx.serviceproxy.ServiceProxyBuilder;
 
 @ProxyGen
 public interface DomoticzService {
@@ -19,9 +18,7 @@ public interface DomoticzService {
     }
 
     static DomoticzService createProxy(Vertx vertx, String address) {
-        return new ServiceProxyBuilder(vertx)
-                .setAddress(address)
-                .build(DomoticzService.class);
+        return new DomoticzServiceVertxEBProxy(vertx, address);
     }
 
     void getDevices(Handler<AsyncResult<JsonArray>> resultHandler);

@@ -32,6 +32,9 @@ public class DomoticzDevice {
     @JsonProperty("HardwareType")
     private String hardwareType;
 
+    @JsonProperty("MaxDimLevel")
+    private Integer maxDimLevel;
+
     @JsonProperty("Image")
     private DomoticzDeviceTypeEnum deviceCategory;
 

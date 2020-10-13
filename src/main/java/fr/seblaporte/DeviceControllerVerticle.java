@@ -18,6 +18,7 @@ public class DeviceControllerVerticle extends AbstractVerticle {
     }
 
     private void controlDevice(Message<JsonObject> jsonObjectMessage) {
+
         final String deviceId = jsonObjectMessage.body().getString("deviceId");
         final String command = jsonObjectMessage.body().getString("command");
 
@@ -27,8 +28,13 @@ public class DeviceControllerVerticle extends AbstractVerticle {
                 replyHandler(jsonObjectMessage, messageAsyncResult);
             });
         } else if ("action.devices.commands.BrightnessAbsolute".equals(command)) {
-            final Long level = jsonObjectMessage.body().getLong("level");
-            vertx.eventBus().send("mqttClient", controlBrightness(deviceId, level), messageAsyncResult -> {
+
+            final Integer maxBrightnessValue = jsonObjectMessage.body().getJsonObject("customData").getInteger("maxBrightnessValue");
+            final Integer requestedBrightness = jsonObjectMessage.body().getJsonObject("params").getInteger("brightness");
+
+            final float brightness = ((float) maxBrightnessValue / 100) * requestedBrightness;
+
+            vertx.eventBus().send("mqttClient", controlBrightness(deviceId, Math.round(brightness)), messageAsyncResult -> {
                 replyHandler(jsonObjectMessage, messageAsyncResult);
             });
         }
@@ -50,7 +56,7 @@ public class DeviceControllerVerticle extends AbstractVerticle {
                 .put("switchcmd", onOff);
     }
 
-    private JsonObject controlBrightness(String deviceId, Long brightness) {
+    private JsonObject controlBrightness(String deviceId, Integer brightness) {
         return new JsonObject()
                 .put("command", "switchlight")
                 .put("idx", Long.valueOf(deviceId))
